@@ -1,6 +1,6 @@
 :root{
-    --cor-primaria: #ee4d2d;
-    --gradiente-primario: linear-gradient(#ee4d2d, #ff7337);
+    --cor-primaria: #00ffdd;
+    --gradiente-primario: linear-gradient(#02b5bb, #00abb1);
 }
 header{
     background: var(--gradiente-primario);

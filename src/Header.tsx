@@ -4,7 +4,6 @@ function Header(){
             <nav>
                 <div className="header-links">
                     <a href="">Central do Vendedor</a>
-                    <a href="">Vender na Shopee</a>
                     <a href="">Baixe o App</a>
                     <a href="">Siga-nos no</a>
                     <a href="">Instagram</a>
@@ -29,6 +28,7 @@ function Header(){
                     </li>
                 </ul>
             </nav>
+            
             <div className="header-container">
                 <div>Logo</div>
                 <div>
