@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+  flex-wrap: wrap;
+}
+
+.container-cadastro, .container-listagem {
+  flex: 1;
+  min-width: 300px;
+  background-color: #fefefe;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.container-cadastro h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #8a2be2;
+  text-align: center;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+form input[type="submit"] {
+  background-color: #8a2be2;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+  background-color: #6f1bd3;
+}
+
+.container-produto {
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+}
+
+.container-produto:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.produto-nome {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.produto-preco,
+.produto-categoria {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+button {
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+}
