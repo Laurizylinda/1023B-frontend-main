@@ -1,40 +1,40 @@
-import { useEffect, useState } from "react"
-import './Container.css'
+import { useEffect, useState } from "react";
+import './Container.css';
 
 interface ProdutosState {
-  id: number,
-  nome: string,
-  preco: number,
-  categoria: string
+  id: number;
+  nome: string;
+  preco: number;
+  categoria: string;
 }
 
 function Container() {
-  const [id, setId] = useState("")
-  const [nome, setNome] = useState("")
-  const [preco, setPreco] = useState("")
-  const [erroMensagem, setErroMensagem] = useState("")
-  const [categoria, setCategoria] = useState("")
-  const [produtos, setProdutos] = useState<ProdutosState[]>([])
-  const [modoEdicao, setModoEdicao] = useState(false)
+  const [id, setId] = useState("");
+  const [nome, setNome] = useState("");
+  const [preco, setPreco] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [erroMensagem, setErroMensagem] = useState("");
+  const [produtos, setProdutos] = useState<ProdutosState[]>([]);
+  const [modoEdicao, setModoEdicao] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resposta = await fetch("http://localhost:8000/produtos")
+        const resposta = await fetch("http://localhost:8000/produtos");
+        const result = await resposta.json();
+
         if (resposta.status === 200) {
-          const result = await resposta.json()
-          setProdutos(result)
+          setProdutos(result);
+        } else if (resposta.status === 400) {
+          setErroMensagem(result.mensagem);
         }
-        if (resposta.status === 400) {
-          const result = await resposta.json()
-          setErroMensagem(result.mensagem)
-        }
-      } catch (erro: any) {
-        setErroMensagem("Produto não encontrado")
+      } catch (erro) {
+        setErroMensagem("Produto não encontrado");
       }
-    }
-    fetchData()
-  }, [])
+    };
+
+    fetchData();
+  }, []);
 
   async function trataForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -43,8 +43,8 @@ function Container() {
       id: parseInt(id),
       nome,
       preco: parseFloat(preco),
-      categoria
-    }
+      categoria,
+    };
 
     try {
       const resposta = await fetch(`http://localhost:8000/produtos/${produtoEditado.id}`, {
@@ -53,97 +53,90 @@ function Container() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(produtoEditado)
-      })
+      });
 
-      const result = await resposta.json()
+      const result = await resposta.json();
 
       if (resposta.status === 200) {
         if (modoEdicao) {
-          setProdutos(produtos.map(p => p.id === produtoEditado.id ? result : p))
-          setModoEdicao(false)
+          setProdutos(produtos.map(p => p.id === produtoEditado.id ? result : p));
+          setModoEdicao(false);
         } else {
-          setProdutos([...produtos, result])
+          setProdutos([...produtos, result]);
         }
 
-        setId("")
-        setNome("")
-        setPreco("")
-        setCategoria("")
+        setId("");
+        setNome("");
+        setPreco("");
+        setCategoria("");
+        setErroMensagem("");
+      } else if (resposta.status === 400) {
+        setErroMensagem(result.mensagem);
       }
 
-      if (resposta.status === 400) {
-        setErroMensagem(result.mensagem)
-      }
-
-    } catch (erro: any) {
-      setErroMensagem("Erro ao salvar produto")
+    } catch (erro) {
+      setErroMensagem("Erro ao salvar produto");
     }
   }
 
   function iniciarEdicao(produto: ProdutosState) {
-    setId(produto.id.toString())
-    setNome(produto.nome)
-    setPreco(produto.preco.toString())
-    setCategoria(produto.categoria)
-    setModoEdicao(true)
+    setId(produto.id.toString());
+    setNome(produto.nome);
+    setPreco(produto.preco.toString());
+    setCategoria(produto.categoria);
+    setModoEdicao(true);
   }
 
-  function trataId(event: React.ChangeEvent<HTMLInputElement>) {
-    console.log("Digitando ID:", event.target.value)
-    setId(event.target.value)
+  function trataId(e: React.ChangeEvent<HTMLInputElement>) {
+    setId(e.target.value);
   }
-  function trataNome(event: React.ChangeEvent<HTMLInputElement>) {
-    setNome(event.target.value)
+
+  function trataNome(e: React.ChangeEvent<HTMLInputElement>) {
+    setNome(e.target.value);
   }
-  function trataPreco(event: React.ChangeEvent<HTMLInputElement>) {
-    setPreco(event.target.value)
+
+  function trataPreco(e: React.ChangeEvent<HTMLInputElement>) {
+    setPreco(e.target.value);
   }
-  function trataCategoria(event: React.ChangeEvent<HTMLInputElement>) {
-    setCategoria(event.target.value)
+
+  function trataCategoria(e: React.ChangeEvent<HTMLInputElement>) {
+    setCategoria(e.target.value);
   }
 
   return (
     <>
-      {erroMensagem &&
+      {erroMensagem && (
         <div className="mensagem-erro">
           <p>{erroMensagem}</p>
         </div>
-      }
+      )}
 
       <div className="container">
         <div className="container-cadastro">
-          <h1>{modoEdicao ? "Editar Produto" : "Cadastro Produto"}</h1>
+          <h1>{modoEdicao ? "Editar Produto" : "Cadastro de Produto"}</h1>
           <form onSubmit={trataForm}>
-            <input
-              type="text"
-              name="id"
-              id="id"
-              placeholder="Id"
-              onChange={trataId}
-              value={id}
-            />
-            <input type="text" name="nome" id="nome" placeholder="Nome" onChange={trataNome} value={nome} />
-            <input type="text" name="preco" id="preco" placeholder="Preço" onChange={trataPreco} value={preco} />
-            <input type="text" name="categoria" id="categoria" placeholder="Categoria" onChange={trataCategoria} value={categoria} />
+            <input type="text" placeholder="ID" value={id} onChange={trataId} required />
+            <input type="text" placeholder="Nome" value={nome} onChange={trataNome} required />
+            <input type="text" placeholder="Preço" value={preco} onChange={trataPreco} required />
+            <input type="text" placeholder="Categoria" value={categoria} onChange={trataCategoria} required />
             <input type="submit" value={modoEdicao ? "Atualizar" : "Cadastrar"} />
           </form>
         </div>
 
         <div className="container-listagem">
-          {produtos.map(produto => {
-            return (
-              <div key={produto.id} className="container-produto">
-                <div className="produto-nome">{produto.nome}</div>
-                <div className="produto-preco">{produto.preco}</div>
-                <div className="produto-categoria">{produto.categoria}</div>
-                <button onClick={() => iniciarEdicao(produto)}>Editar</button>
-              </div>
-            )
-          })}
+          <h2>Lista de Produtos</h2>
+          {produtos.map(produto => (
+            <div key={produto.id} className="container-produto">
+              <div><strong>Nome:</strong> {produto.nome}</div>
+              <div><strong>Preço:</strong> R$ {produto.preco.toFixed(2)}</div>
+              <div><strong>Categoria:</strong> {produto.categoria}</div>
+              <button onClick={() => iniciarEdicao(produto)}>Editar</button>
+            </div>
+          ))}
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Container
+export default Container;
